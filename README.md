@@ -1,6 +1,6 @@
 ## Finally Did it
 
-A simple tool for checking your Project Tasks, and post a png image to your Twitter account
+A simple tool for checking your Project Tasks, and post the checker result to your Twitter account with a customizable message.
 
 ## Requirements
 - Holberton API key
@@ -14,14 +14,15 @@ A simple tool for checking your Project Tasks, and post a png image to your Twit
 - Django 3.0 +
 
 ### Install Django and required modules
-The installation script covers the mayority of dependency installations, if the environment fail please let me know via 
-<danrodcastillo1994@gmail.com> by now, I will take care of your need and try to solve the issue.
+The installation script covers the mayority of dependency installations, if the environment fail please let me know via email <danrodcastillo1994@gmail.com> by now, I will take care of your need and try to solve the issue.
+
+Install all dependencies and modules
 
 ```
 ./install.sh
 ```
 
-go to the [checker_publisher]('/checker_publisher') directory and run 
+go to the [checker_publisher]('checker_publisher') directory and run 
 
 ```
 ./refresh_publisher  # This will run migrations functions and will
