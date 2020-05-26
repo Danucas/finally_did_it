@@ -47,14 +47,16 @@
 			<h2>choose where to send your customized message</h2>
 			<ul class="media">
 				<li><input name="twitter" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/twitter.png' %}" alt="twitter">&nbsp;Twitter</li>
-				<li><input name="slack" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/slack.png' %}" alt="slack">&nbsp;Slack</li>
-				<li><input name="telegram" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/telegram.png' %}" alt="telegram">&nbsp;Telegram</li>
+				<li style="display: none;"><input name="slack" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/slack.png' %}" alt="slack">&nbsp;Slack</li>
+				<li style="display: none;"><input name="telegram" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/telegram.png' %}" alt="telegram">&nbsp;Telegram</li>
 			</ul>
 			<hr>
 			<h2 id="username"></h2>
 			<h2 id="email"></h2>
 			<hr>
 			<h3>Logout</h3>
+
+
 		</div>
 		<div class="container">
 			<div class="keys">

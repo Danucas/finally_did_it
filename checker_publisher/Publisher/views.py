@@ -1,17 +1,18 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
-from .models import User, Project
+from .models import User, Project, Channel, Sended
 import requests
 import json
 import uuid
 import base64
-from Publisher.twitter_api import Tapi
-from Publisher.media_upload import GifTweet
+from .twitter_api import Tapi
+from .media_upload import GifTweet
+from .parser import parse_twitter
 
 # Create your views here.
 
 
-def channels(request):
+def dashboard(request):
     """
     Form to store the media setup
     API keys etc...
@@ -143,31 +144,92 @@ def check_task(request):
                 break
     return HttpResponse(json.dumps(resp.json()), content_type='application/json')
 
-
-def send_image(request):
+def send_twitter(filename, message, twitter):
     """
-    Send image to channels
+    Send the image via twitter Using Tapi
     """
-    # saving image in disk
-    image = bytes(request.POST.get('image').split(',')[1], 'utf-8')
-    image = base64.decodebytes(image)
-    with open('test.png', 'wb') as fil:
-        fil.write(image)
+    # cons_key = "rkmNCkTPy1W5xPaKYiRevP8V6"
+    # cons_sec = "52sL2OeMwURDWNyh39vjfJFm2UKTYpSlJwOAcis5CTloftDa0j"
+    # acc_tok = "1144866141090799616-3v6RJ1rXrdjPqL5ctJQ5sqP8rlVHDd"
+    # acc_tok_sec = "3ldeSHcohBnt87cwEYUKp9O9Rxv2liUge5q9guJS23Iav"
+    api = Tapi(twitter.api_key,
+                twitter.api_secret,
+                twitter.token,
+                twitter.token_secret)
     # Accessing Twitter
     # Creating API handler instance
-    cons_key = "rkmNCkTPy1W5xPaKYiRevP8V6"
-    cons_sec = "52sL2OeMwURDWNyh39vjfJFm2UKTYpSlJwOAcis5CTloftDa0j"
-    acc_tok = "1144866141090799616-3v6RJ1rXrdjPqL5ctJQ5sqP8rlVHDd"
-    acc_tok_sec = "3ldeSHcohBnt87cwEYUKp9O9Rxv2liUge5q9guJS23Iav"
-    api = Tapi(cons_key, cons_sec, acc_tok, acc_tok_sec)
-    filename = 'test.png'
+    
     uploader = GifTweet(filename, api)
     uploader.upload_init('image/png')
     uploader.upload_append()
     uploader.upload_finish()
     uploader.check_status()
-    # Get te message
+    # Get the message
+    
+    return uploader.post(message).json()
+    # return 'done'
+ 
+
+
+def send_image(request):
+    """
+    Send image to channels
+    """
+    channels = ''.join(request.POST.get('channels')).split(',')
+    print('channels', channels)
+    if channels[0] == '':
+        return HttpResponse(status=305)
+    # saving image in disk
+    image = bytes(request.POST.get('image').split(',')[1], 'utf-8')
+    image = base64.decodebytes(image)
+    with open('test.png', 'wb') as fil:
+        fil.write(image)
+    filename = 'test.png'
     message = request.POST.get('content')
-    uploader.post(message)
+    resp = []
+    for channel in channels:
+        media = Channel.objects.filter(name=channel)
+        if len(media) == 0:
+            return HttpResponse(json.dumps({'media': channel}), status=404, content_type='application/json')
+        else:
+            pass
+    for channel in channels:
+        media = Channel.objects.filter(name=channel)
+        if channel == 'twitter':
+            resp.append(send_twitter(filename, message, media[0]))
+        if channel == 'slack':
+            pass
+    print(resp)
+    resp = parse_twitter(resp[0])
+    template = render(request, 'sended_messages.html', {'messages': resp})
+    return HttpResponse()
+
+def save_channel(request):
+    """
+    save the channel model
+    """
+    print(request.GET)
+    channel = Channel.objects.filter(name=request.GET.get('channel'))
+    if len(channel) == 0:
+        channel = Channel()
+    else:
+        channel = channel[0]
+    channel.name = request.GET.get('channel')
+    channel.api_key = request.GET.get('api_key')
+    channel.api_secret = request.GET.get('api_secret')
+    channel.token = request.GET.get('token')
+    channel.token_secret = request.GET.get('token_secret')
+    channel.save()
+    print(channel)
 
     return HttpResponse()
+
+def check_channel(request):
+    """
+    Chek if a channel already exists return the dict
+    """
+    name = request.GET.get('channel')
+    channel = Channel.objects.filter(name=name)
+    if len(channel) == 0:
+        return HttpResponse(status=404)
+    return HttpResponse(json.dumps(channel[0].to_dict()), content_type='application/json')
