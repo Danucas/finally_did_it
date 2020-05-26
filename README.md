@@ -22,7 +22,7 @@ Install all dependencies and modules
 ./install.sh
 ```
 
-go to the [checker_publisher]('checker_publisher') directory and run 
+go to the [checker_publisher](checker_publisher/) directory and run 
 
 ```
 ./refresh_publisher  # This will run migrations functions and will
