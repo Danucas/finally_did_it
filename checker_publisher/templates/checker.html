@@ -1,0 +1,11 @@
+{% load static %}
+{% for check in checks %}
+	<div class="tooltip check {{check.check_label}} {{ check.passed }}">
+		{% if check.passed %}
+		<img src="{% static 'images/done.png' %}" alt="">
+		{% else %}
+		<img src="{% static 'images/error.png' %}" alt="">
+		{% endif %}
+		{{ check.title }}
+	</div>
+{% endfor %}

@@ -1,0 +1,40 @@
+{% load static %}
+<ul project="{{ p }}">
+	<h2>Tasks</h2>
+	{% for task in tasks %}
+	<li class="task">
+		<div>
+			<label>{{ task.position }}.{{ task.title }} id {{ task.id }}</label>
+			<button task_pos="{{ task.position }}"
+					task_name="{{ task.title }}"
+					task_id="{{ task.id }}">CHECK</button>
+		</div>
+		<div>
+			<p>repository: {{ task.github_repo }}<br>
+				folder: {{ task.github_dir }}<br>
+				file: {{ task.github_file }}<br>
+			</p>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+<ul>
+	<div>
+		<label style="color: white;">Sended Messages</label>
+	</div>
+	<li class="statuses">
+		<div class="st_cont">
+			<img class="status_img" src="{% static 'images/slack.png' %}" alt="">
+			<div>
+				<p>display_name&nbsp;<span>username</span>&nbsp;<span>time</span><br>
+					Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+				</p>
+			</div>
+		</div>
+	</li>
+</ul>
