@@ -55,13 +55,13 @@ class Sended(models.Model):
     """
     Model of sended messages
     """
-    channel = models.CharField(max_length=100)
+    channel = models.CharField(max_length=100, default='twitter')
     status_id = models.CharField(max_length=100)
     user_name = models.CharField(max_length=100)
     user_screen_name = models.CharField(max_length=100)
     content = models.CharField(max_length=300)
     img_url = models.CharField(max_length=300)
-    checker_url = models.CharField(max_length=300)
+    checker_url = models.CharField(max_length=300, default='')
     date = models.CharField(max_length=300)
 
     def to_dict(self):
