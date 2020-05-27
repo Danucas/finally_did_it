@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
-from .models import User, Project, Channel, Sended
+from .models import Channel, Sended
 import requests
 import json
 import uuid
@@ -22,71 +22,6 @@ def dashboard(request):
     return res
 
 
-def save_user(request):
-    """
-    save the user
-    """
-    api_key = request.GET.get('api_key')
-    email = request.GET.get('email')
-    passwd = request.GET.get('pass')
-    new_user = User()
-    new_user.api_key = api_key
-    new_user.email = email
-    new_user.password = passwd
-    new_user.save()
-    return check_user(request)
-
-
-def check_user(request):
-    """
-    check if an user exists
-    """
-    users = User.objects.all()
-    # print('Users\t', users, len(users))
-    content = str(users)
-    resp = HttpResponse()
-    if len(users) == 0:
-        content = 'Not found'
-        resp.status_code = 404
-        resp.content = content
-        return resp
-    else:    
-        user = users[0]
-        print(user.to_dict())
-        if user.token != None:
-            print('token exists')
-            url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + user.token
-            resp = requests.get(url)
-            if resp.status_code == 200:
-                return HttpResponse(json.dumps(user.to_dict()), content_type='application/json')
-            else:
-                print('request new token')
-                user.token = None
-                user.save()
-                check_user(request)
-        url = 'https://intranet.hbtn.io/users/auth_token.json'
-        data = {
-            'api_key': user.api_key,
-            'email': user.email,
-            'password': user.password,
-            'scope': 'checker'
-        }
-        header = {'Content-Type': 'application/json'}
-        user_info = requests.post(url, json=data, headers=header)
-        if user_info.status_code == 200:
-            user.token = user_info.json()['auth_token']
-            user.username = user_info.json()['full_name']
-            user.user_id = user_info.json()['user_id']
-            user.save()
-            return HttpResponse(json.dumps(user.to_dict()), content_type="application/json")
-        else:
-            user.delete()
-            print(user_info.status_code, user_info.reason)
-            resp = HttpResponse()
-            resp.status_code = 401
-            return resp
-
-
 def search_project(request):
     """
     Handles project request
@@ -97,9 +32,6 @@ def search_project(request):
     param = {'auth_token': token}
     resp = requests.get(url, params=param, headers={'Content-Type': 'application/json'})
     if resp.status_code == 200:
-        project = Project()
-        project.project_id = id
-        project.name = resp.json()['name']
         js = resp.json()
         js['p'] = resp.json()['name']
         html = render(request, 'project.html', js)
