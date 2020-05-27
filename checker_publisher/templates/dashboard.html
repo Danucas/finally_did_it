@@ -4,9 +4,11 @@
 	<title>Publisher</title>
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}"/>
 	<link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{% static 'styles/publisher.css' %}?{{ id }}">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="{% static 'scripts/init.js' %}?{{ id }}"></script>
+	<script type="text/javascript" src="{% static 'scripts/user.js' %}?{{ id }}"></script>
 	<script type="text/javascript" src="{% static 'scripts/popup.js' %}?{{ id }}"></script>
 	<script type="text/javascript" src="{% static 'scripts/forms.js' %}?{{ id }}"></script>
 	<script type="text/javascript" src="{% static 'scripts/scroll.js' %}?{{ id }}"></script>
@@ -19,49 +21,11 @@
 			<div class="init_wait" style="background-color: white; width: 180px;margin-left: 100px;border-radius: 80px; margin-top: 100px;">
 				<img src="{% static 'images/wait_2.gif' %}" style="width: 100px; height: 100px;margin-left: 40px;" alt="">
 			</div>
-			
-			<form style="display: none;" action="">
-				<fieldset style="border: none;">
-					<legend style="font-size: 20px; text-align: center;color: coral;">Sign in</legend><br>
-					<div class="input_cont">
-						<i class="icon key_icon"></i>
-						<input name="intr_api_key" type="text" placeholder="api key"><br><br>
-					</div>
-					<div class="input_cont">
-						<i class="icon user_icon"></i>
-						<input name="email" type="text" placeholder="email"><br><br>
-					</div>
-					<div class="input_cont">
-						<i class="icon pass_icon"></i>
-						<input name="pass" type="password" placeholder="password"><br><br>
-					</div>
-				</fieldset>
-			</form>
-			<button style="display: none; text-shadow: 0px 0px 2px black;">Sign in</button>
-		</div>
-		<div class="bar">
-
-			<h1>Publisher dashboard<br>Welcome back</h1>
-			<hr>
-			<h1>Channels</h1>
-			<h2>choose where to send your customized message</h2>
-			<ul class="media">
-				<li><input name="twitter" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/twitter.png' %}" alt="twitter">&nbsp;Twitter</li>
-				<li style="display: none;"><input name="slack" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/slack.png' %}" alt="slack">&nbsp;Slack</li>
-				<li style="display: none;"><input name="telegram" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/telegram.png' %}" alt="telegram">&nbsp;Telegram</li>
-			</ul>
-			<hr>
-			<h2 id="username"></h2>
-			<h2 id="email"></h2>
-			<hr>
-			<h3>Logout</h3>
-
-
-		</div>
-		<div class="container">
+			<div class="alert" style="display: none;">
+				
+			</div>
 			<div class="keys">
-				<button class="back">close</button>
-				<br><br>
+				<h6 class="back">close</h6>
 				<form action="">
 					<fieldset class="ins">
 						<legend>Publisher keys</legend>
@@ -77,11 +41,61 @@
 				</form>
 				<button id="save_channel" class="media_save">Save</button>
 			</div>
+			
+			<form style="display: none;" action="">
+				<fieldset style="border: none;">
+					<legend style="font-size: 20px; text-align: center;color: coral;">Sign in</legend><br>
+					<div class="input_cont">
+						<i class="icon key_icon"></i>
+						<input name="intr_api_key" type="text" placeholder="Intranet api key"><br><br>
+					</div>
+					<div class="input_cont">
+						<i class="icon user_icon"></i>
+						<input name="email" type="text" placeholder="Holberton email"><br><br>
+					</div>
+					<div class="input_cont">
+						<i class="icon pass_icon"></i>
+						<input name="pass" type="password" placeholder="Intranet password"><br><br>
+					</div>
+				</fieldset>
+			</form>
+			<button style="display: none; text-shadow: 0px 0px 2px black;">Sign in</button>
+		</div>
+		<div class="bar">
+
+			<h1>Publisher dashboard<br>Welcome back</h1>
+			<h2 id="username"></h2>
+			<h2 id="email"></h2>
+			<hr>
+			<h1>Channels</h1>
+			<h2>choose where to send your customized message</h2>
+			<ul class="media">
+				<li><input name="twitter" type="checkbox" checked="true">&nbsp;&nbsp;<img src="{% static 'images/twitter.png' %}" alt="twitter">&nbsp;Twitter</li>
+				<li style="display: none;"><input name="slack" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/slack.png' %}" alt="slack">&nbsp;Slack</li>
+				<li style="display: none;"><input name="telegram" type="checkbox">&nbsp;&nbsp;<img src="{% static 'images/telegram.png' %}" alt="telegram">&nbsp;Telegram</li>
+			</ul>
+			<hr>
+			<h3>Logout</h3>
+
+
+		</div>
+		<div class="container">
 			<div class="project">
 				<label class="p_id" for=""><input type="number" placeholder="project id">
 					<button>search</button><img src="{% static 'images/wait_2.gif' %}" alt=""></label>
 					<h1 class="p_name">Project</h1>
 				<div class="tasks_and_status">
+					<div style="display: block;">
+						<h2>Tasks</h2>
+						<ul class="tasks">
+						</ul>
+					</div>
+					<div>
+						<label style="color: white;">Sended Messages</label>
+						<ul class="sended">
+						
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -94,15 +108,17 @@
 			<img class="corr_wait" src="{% static 'images/wait_2.gif' %}" alt="">
 			<div class="correction">
 			</div>
-			<h4 style="display: none;">Please write your success history</h4>
-			<h1>You can use the following symbols to place the project an task title<br><br>
+			<h2 style="font-size: 16px; margin-left: 80px; text-align: center; max-width: 300px;">Write a message that transmits your joy of achieving goals</h2>
+			<h1 class="toggle" style="cursor: pointer;">show help</h1>
+			<h1 class="help" style="color: green;display: none;">You can use the following symbols to place the project an task title<br><br>
 				&nbsp;&nbsp;&nbsp;&nbsp;[p] = Project title<br>
 				&nbsp;&nbsp;&nbsp;&nbsp;[t] = Task Position and Title<br><br>
 				Example:<br><br>
 				&nbsp;&nbsp;&nbsp;&nbsp;The [p] project was awesome, particularly the [t] task.
 			</h1>
+			<h4 style="display: none;">Please write a message</h4>
+			<button class="save png">Send</button>
 			<input type="text" placeholder="Write your message here">
-			<button class="save png">Send Message with image</button>
 		</div>
 	</body>
 	

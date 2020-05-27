@@ -1,0 +1,15 @@
+{% for message in messages %}
+<li class="statuses">
+	<div class="st_cont">
+		<img class="status_img" src="{{ message.img_url }}" alt="">
+		<div>
+			<p><span style="font-weight: bold;">{{ message.user_name }}</span>
+				&nbsp;<span style="color: gray;">@{{ message.user_screen_name }}</span>
+				&nbsp;<span style="color: gray;">{{ message.date }}</span><br>
+				<br>{{ message.content }}
+			</p>
+			<img class="check_img" src="{{ message.checker_url }}" alt="">
+		</div>
+	</div>
+</li>
+{% endfor %}

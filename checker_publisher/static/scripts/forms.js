@@ -1,56 +1,8 @@
 $(window).on('load', function () {
- // To save user credentials
- // First call auth token and the backend will store those values
- $('.user button').on('click', function (event) {
-	const apiKey = $('[name="intr_api_key"]').val();
-	const email = $('[name="email"]').val();
-	const pass = $('[name="pass"]').val();
-	if (apiKey === '' || email === '' || pass === '') {
-		$('.user legend').text('Please complete all the fields');
-		// alert('Ups! seems like you missed some fields\nTry again!');
-		if (apiKey === '') {
-			$('[name="intr_api_key"]').addClass('bad_field');
-			$('[name="intr_api_key"]').attr('placeholder', 'Your api key');
-		}
-		if (email === '') {
-			$('[name="email"]').addClass('bad_field');
-			$('[name="email"]').attr('placeholder', 'Your email');
-		}
-		if (pass === '') {
-			$('[name="pass"]').addClass('bad_field');
-			$('[name="pass"]').attr('placeholder', 'Password');
-		}
-	} else {
-		const data = {};
-		data.api_key = apiKey;
-		data.email = email;
-		data.pass = pass;
-		$('.init_wait').css('display', 'block');
-		$('.user form').css('display', 'none');
-		$('.user button').css('display', 'none');
-		$.ajax({
-			url: 'http://127.0.0.1:8000/dashboard/submit_user',
-			data: data,
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			},
-			success: function (resp) {
-				console.log(resp);
-				location.reload();
-			},
-			error: function (resp) {
-				$('.init_wait').css('display', 'none');
-				$('.user form').css('display', 'block');
-				$('.user button').css('display', 'block');
-				$('.user legend').css('color', 'red');
-				$('.user legend').text('Your email or password was incorrect');
-			}
-		});
-	}
-  });
+ // To save user credentials	
   // Start a new test
   $('.task button').on('click', function (event) {
-	console.log("run checker");
+	console.log("open checker");
 	$('.right_column').css('visibility', 'visible');
 	console.log('checking task :', $(this).attr('task_id'));
   });
@@ -63,15 +15,15 @@ $(window).on('load', function () {
 		$('.p_id img').css('visibility', 'visible');
 		$.ajax({
 			url: 'http://127.0.0.1:8000/dashboard/search_project',
-			data: {'project_id': $('.p_id input').val()},
+			data: {'project_id': $('.p_id input').val(),
+					'token': sessionStorage.getItem('publisher_token')},
 			success: function (resp) {
 				// Seting up the view
-				$('.tasks_and_status').empty();
-				$('.tasks_and_status').append($(resp)); 
-				console.log($('.tasks_and_status > ul').attr('project'));
+				$('.tasks').empty();
+				$('.tasks').append($(resp)); 
 				$('.p_name').text($('[project]').attr('project')); // Project name-title
 				// Set bar to the new height
-				const height = $('[project]').height() + 320;
+				const height = $('.tasks').outerHeight() + $('.tasks').position().top;
 				console.log('new height: ', height);
 				$('.bar').height(height.toString() + 'px');
 				$('.p_id img').css('visibility', 'hidden');
@@ -98,7 +50,8 @@ $(window).on('load', function () {
 	$('.corr_wait').css('visibility', 'visible');
 	$.ajax({
 		url: 'http://127.0.0.1:8000/dashboard/check_task',
-		data: {'task': task},
+		data: {'task': task,
+				'token': sessionStorage.getItem('publisher_token')},
 		success: function (result) {
 			$('.correction').empty()
 			$('.correction').append($(result));

@@ -1,6 +1,6 @@
 from django.contrib import admin 
 from django.urls import path, include
-from .views import dashboard, save_user, check_user, search_project, check_task, send_image, save_channel, check_channel
+from .views import dashboard, save_user, check_user, search_project, check_task, send_image, save_channel, check_channel, sended
 
 urlpatterns = [ 
    path('dashboard', dashboard),
@@ -11,4 +11,5 @@ urlpatterns = [
    path('dashboard/send_image', send_image),
    path('dashboard/save_channel', save_channel),
    path('dashboard/check_channel', check_channel),
+   path('dashboard/sended', sended),
 ]

@@ -92,19 +92,14 @@ def search_project(request):
     Handles project request
     """
     id = request.GET.get('project_id')
-    user = User.objects.all()
-    if (len(user) == 0):
-        return HttpResponse()
-    else:
-        user = user[0]
+    token = request.GET.get('token')
     url = 'https://intranet.hbtn.io/projects/' + id + '.json'
-    param = {'auth_token': user.token}
+    param = {'auth_token': token}
     resp = requests.get(url, params=param, headers={'Content-Type': 'application/json'})
     if resp.status_code == 200:
         project = Project()
         project.project_id = id
         project.name = resp.json()['name']
-        project.save()
         js = resp.json()
         js['p'] = resp.json()['name']
         html = render(request, 'project.html', js)
@@ -118,24 +113,19 @@ def check_task(request):
     """
     ask for a new correction
     """
-    user = User.objects.all()
-    if (len(user) == 0):
-        return HttpResponse()
-    else:
-        user = user[0]
+    token = request.GET.get('token')
     id = request.GET.get('task')
-    url = 'https://intranet.hbtn.io/tasks/' + id + '/start_correction.json?auth_token='+ user.token
+    url = 'https://intranet.hbtn.io/tasks/' + id + '/start_correction.json?auth_token='+ token
     param = {}
     resp = requests.post(url, data=param, headers={'Content-Type': 'application/json'})
     if resp.status_code == 200:
         while True:
             uri = 'https://intranet.hbtn.io/correction_requests/' +\
-                str(resp.json()['id']) + '.json?auth_token=' + user.token
+                str(resp.json()['id']) + '.json?auth_token=' + token
             corr = requests.get(uri, headers={'Content-Type': 'application/json'})
             if (corr.json()['status'] == 'Sent'):
                 pass
             elif (corr.json()['status'] == 'Done'):
-                # print(corr.json())
                 html = render(request, 'checker.html', corr.json()['result_display'])
                 print(html)
                 return html
@@ -144,14 +134,11 @@ def check_task(request):
                 break
     return HttpResponse(json.dumps(resp.json()), content_type='application/json')
 
+
 def send_twitter(filename, message, twitter):
     """
     Send the image via twitter Using Tapi
     """
-    # cons_key = "rkmNCkTPy1W5xPaKYiRevP8V6"
-    # cons_sec = "52sL2OeMwURDWNyh39vjfJFm2UKTYpSlJwOAcis5CTloftDa0j"
-    # acc_tok = "1144866141090799616-3v6RJ1rXrdjPqL5ctJQ5sqP8rlVHDd"
-    # acc_tok_sec = "3ldeSHcohBnt87cwEYUKp9O9Rxv2liUge5q9guJS23Iav"
     api = Tapi(twitter.api_key,
                 twitter.api_secret,
                 twitter.token,
@@ -168,7 +155,6 @@ def send_twitter(filename, message, twitter):
     
     return uploader.post(message).json()
     # return 'done'
- 
 
 
 def send_image(request):
@@ -176,6 +162,10 @@ def send_image(request):
     Send image to channels
     """
     channels = ''.join(request.POST.get('channels')).split(',')
+    token = request.POST.get('token')
+    url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
+    user = requests.get(url)
+
     print('channels', channels)
     if channels[0] == '':
         return HttpResponse(status=305)
@@ -199,17 +189,22 @@ def send_image(request):
             resp.append(send_twitter(filename, message, media[0]))
         if channel == 'slack':
             pass
+    # print(resp)
+    resp = parse_twitter(resp[0], user.json()['email'])
     print(resp)
-    resp = parse_twitter(resp[0])
-    template = render(request, 'sended_messages.html', {'messages': resp})
-    return HttpResponse()
+    template = render(request, 'sended_messages.html', {'messages': [resp]})
+    return template
+
 
 def save_channel(request):
     """
     save the channel model
     """
     print(request.GET)
-    channel = Channel.objects.filter(name=request.GET.get('channel'))
+    token = request.GET.get('publisher_token')
+    url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
+    resp = requests.get(url)
+    channel = Channel.objects.filter(name=request.GET.get('channel'), email=resp.json()['email'])
     if len(channel) == 0:
         channel = Channel()
     else:
@@ -219,17 +214,35 @@ def save_channel(request):
     channel.api_secret = request.GET.get('api_secret')
     channel.token = request.GET.get('token')
     channel.token_secret = request.GET.get('token_secret')
+    channel.email = resp.json()['email']
     channel.save()
     print(channel)
-
     return HttpResponse()
+
 
 def check_channel(request):
     """
     Chek if a channel already exists return the dict
     """
     name = request.GET.get('channel')
-    channel = Channel.objects.filter(name=name)
+    token = request.GET.get('token')
+    url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
+    resp = requests.get(url)
+    channel = Channel.objects.filter(email=resp.json()['email'])
+    print(Channel.objects.all())
     if len(channel) == 0:
         return HttpResponse(status=404)
     return HttpResponse(json.dumps(channel[0].to_dict()), content_type='application/json')
+
+
+def sended(request):
+    """
+    return the sended messages objects
+    """
+    token = request.GET.get('token')
+    url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
+    resp = requests.get(url)
+    sends = Sended.objects.filter(email=resp.json()['email'])
+    objs = [s.to_dict() for s in sends]
+    template = render(request, 'sended_messages.html', {'messages': objs})
+    return template
