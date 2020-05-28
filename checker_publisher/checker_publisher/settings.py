@@ -27,7 +27,7 @@ with open(os.path.abspath('sec_key'), 'r') as sec:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', '35.231.236.18']
 
 
 # Application definition
