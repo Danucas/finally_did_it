@@ -14,7 +14,7 @@ $(window).on('load', function () {
 			$('.user button').css('display', 'none');
 			$('.user').css('display', 'none');
 			$.ajax({
-				url: 'http://127.0.0.1:8000/dashboard/sended',
+				url: 'dashboard/sended',
 				data: {'token': sessionStorage.getItem('publisher_token')},
 				success: function (data) {
 					$('.sended').empty();
@@ -43,6 +43,7 @@ $(window).on('load', function () {
 			success: function (resp) {
 				sessionStorage.setItem('publisher_token', resp.auth_token);
 				setUserAndEmail(resp.full_name, '');
+				displayLogin(false, '');
 			},
 			error: function () {
 				displayLogin(true, 'You password or email is wrong');

@@ -133,7 +133,7 @@ $(window).on('load', function () {
 		}
 		$.ajax({
 			type: 'POST',
-			url: 'http://127.0.0.1:8000/dashboard/send_image',
+			url: 'dashboard/send_image',
 			data: { 'image': canvas.toDataURL(),
 					'content': mess,
 					'channels': channels,
@@ -167,7 +167,7 @@ $(window).on('load', function () {
 	}
 	const checkChannel = function (send, parms) {
 		$.ajax({
-            url: 'http://127.0.0.1:8000/dashboard/check_channel',
+            url: 'dashboard/check_channel',
 			data: {'channel': editing,
 					'token': sessionStorage.getItem('publisher_token')
 				},
@@ -233,7 +233,7 @@ $(window).on('load', function () {
           console.log('save channel');
           console.log(editing);
           $.ajax({
-              url: 'http://127.0.0.1:8000/dashboard/save_channel',
+              url: 'dashboard/save_channel',
               headers: {
                   'Access-Control-Allow-Origin': '*'
               },

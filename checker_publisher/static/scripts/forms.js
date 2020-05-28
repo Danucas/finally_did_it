@@ -14,7 +14,7 @@ $(window).on('load', function () {
 		searching = true;
 		$('.p_id img').css('visibility', 'visible');
 		$.ajax({
-			url: 'http://127.0.0.1:8000/dashboard/search_project',
+			url: 'dashboard/search_project',
 			data: {'project_id': $('.p_id input').val(),
 					'token': sessionStorage.getItem('publisher_token')},
 			success: function (resp) {
@@ -49,7 +49,7 @@ $(window).on('load', function () {
 	console.log(task);
 	$('.corr_wait').css('visibility', 'visible');
 	$.ajax({
-		url: 'http://127.0.0.1:8000/dashboard/check_task',
+		url: 'dashboard/check_task',
 		data: {'task': task,
 				'token': sessionStorage.getItem('publisher_token')},
 		success: function (result) {
