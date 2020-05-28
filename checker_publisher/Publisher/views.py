@@ -93,40 +93,43 @@ def send_image(request):
     """
     Send image to channels
     """
-    channels = ''.join(request.POST.get('channels')).split(',')
-    token = request.POST.get('token')
-    url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
-    user = requests.get(url)
+    try:
+        channels = ''.join(request.POST.get('channels')).split(',')
+        token = request.POST.get('token')
+        url = 'https://intranet.hbtn.io/users/me.json?auth_token=' + token
+        user = requests.get(url)
 
-    print('channels', channels)
-    if channels[0] == '':
-        return HttpResponse(status=305)
-    # saving image in disk
-    image = bytes(request.POST.get('image').split(',')[1], 'utf-8')
-    image = base64.decodebytes(image)
-    with open('test.png', 'wb') as fil:
-        fil.write(image)
-    filename = 'test.png'
-    message = request.POST.get('content')
-    resp = []
-    for channel in channels:
-        media = Channel.objects.filter(name=channel)
-        if len(media) == 0:
-            return HttpResponse(json.dumps({'media': channel}), status=404, content_type='application/json')
-        else:
-            pass
-    for channel in channels:
-        media = Channel.objects.filter(name=channel)
-        if channel == 'twitter':
-            resp.append(send_twitter(filename, message, media[0]))
-        if channel == 'slack':
-            pass
-    # print(resp)
-    resp = parse_twitter(resp[0], user.json()['email'])
-    print(resp)
-    template = render(request, 'sended_messages.html', {'messages': [resp]})
-    return template
-
+        print('channels', channels)
+        if channels[0] == '':
+            return HttpResponse(status=305)
+        # saving image in disk
+        image = bytes(request.POST.get('image').split(',')[1], 'utf-8')
+        image = base64.decodebytes(image)
+        with open('test.png', 'wb') as fil:
+            fil.write(image)
+        filename = 'test.png'
+        message = request.POST.get('content')
+        resp = []
+        for channel in channels:
+            media = Channel.objects.filter(name=channel)
+            if len(media) == 0:
+                return HttpResponse(json.dumps({'media': channel}), status=404, content_type='application/json')
+            else:
+                pass
+        for channel in channels:
+            media = Channel.objects.filter(name=channel)
+            if channel == 'twitter':
+                resp.append(send_twitter(filename, message, media[0]))
+            if channel == 'slack':
+                pass
+        # print(resp)
+        resp = parse_twitter(resp[0], user.json()['email'])
+        print(resp)
+        template = render(request, 'sended_messages.html', {'messages': [resp]})
+        return template
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=403)
 
 def save_channel(request):
     """

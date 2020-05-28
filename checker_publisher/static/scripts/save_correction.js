@@ -122,7 +122,8 @@ $(window).on('load', function () {
 			chi.icon = icon;
 			drawText(chi, canvas);
 		}
-		const csrftoken = document.cookie.split('=')[1];
+		const csrftoken = $('.png').attr('tok');
+		// console.log(csrftoken);
 		let mess = message.replace('[p]', $('[project]').attr('project'));
 		mess = mess.replace('[t]', $('.correction').attr('task_name'));
 		let channels = '';
@@ -143,7 +144,7 @@ $(window).on('load', function () {
 			},
 			crossDomain:true,
 			success: function (data) {
-				console.log(data);
+				// console.log(data);
 				$('.user').css('display', 'none');
 				$('.keys').css('visibility', 'hidden');
 				$('.sended').append($(data));
@@ -211,13 +212,13 @@ $(window).on('load', function () {
     });
     // Stores or delete item from medias list
     $('.media input').on('click', function (event) {
-      console.log(this.checked);
+      // console.log(this.checked);
       if (this.checked) {
         medias.push($(this).attr('name'));
       } else {
           medias.splice(medias.indexOf($(this).attr('name')), 1);
       }
-      console.log(medias);
+      // console.log(medias);
       show = false;
     });
     // Submit Media channel access Keys
@@ -230,8 +231,8 @@ $(window).on('load', function () {
           $('.keys legend').text('Please provide all the keys');
           $('.keys legend').css('color', 'red');
       } else {
-          console.log('save channel');
-          console.log(editing);
+          // console.log('save channel');
+          // console.log(editing);
           $.ajax({
               url: 'dashboard/save_channel',
               headers: {
@@ -245,7 +246,7 @@ $(window).on('load', function () {
                       'publisher_token': sessionStorage.getItem('publisher_token')
               },
               success: function (data) {
-                  console.log(data);
+                  // console.log(data);
                   $('.keys').css('display', 'none');
                   $('.user').css('display', 'none');
               },

@@ -2,9 +2,9 @@ $(window).on('load', function () {
  // To save user credentials	
   // Start a new test
   $('.task button').on('click', function (event) {
-	console.log("open checker");
+	// console.log("open checker");
 	$('.right_column').css('visibility', 'visible');
-	console.log('checking task :', $(this).attr('task_id'));
+	// console.log('checking task :', $(this).attr('task_id'));
   });
   let searching = false;
   let task = null;
@@ -24,14 +24,14 @@ $(window).on('load', function () {
 				$('.p_name').text($('[project]').attr('project')); // Project name-title
 				// Set bar to the new height
 				const height = $('.tasks').outerHeight() + $('.tasks').position().top;
-				console.log('new height: ', height);
+				// console.log('new height: ', height);
 				$('.bar').height(height.toString() + 'px');
 				$('.p_id img').css('visibility', 'hidden');
 				$('.task button').on('click', function (event) {
-					console.log("run checker");
+					// console.log("run checker");
 					$('.right_column').css('visibility', 'visible');
 					$('.right_column').height($(window).height());
-					console.log('checking task :', $(this).attr('task_id'));
+					// console.log('checking task :', $(this).attr('task_id'));
 					const task_id = $(this).attr('task_id');
 					task = task_id;
 					const name = $(this).attr('task_name');
@@ -46,7 +46,7 @@ $(window).on('load', function () {
 	  }
   });
   $('.runchecker').on('click', function (event) {
-	console.log(task);
+	// console.log(task);
 	$('.corr_wait').css('visibility', 'visible');
 	$.ajax({
 		url: 'dashboard/check_task',
