@@ -13,7 +13,7 @@ A simple tool for checking your Project Tasks, and post the checker result to yo
 ### Environment
 - Ubuntu 18.04.4
 - Python required 3.6 or higher [follow steps 5 & 6](https://medium.com/@moreless/install-python-3-6-on-ubuntu-16-04-28791d5c2167) then use update alternatives to set python3.6 as higher priority
-- Django 3.0 + -> will be installed by the script please be sure of using pip for pthon3.6 as default
+- Django 3.0 + -> will be installed by the script please be sure of using pip for python3.6 as default
 
 
 ### Install Django and required modules for Development purpose
