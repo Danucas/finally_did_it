@@ -12,8 +12,8 @@ A simple tool for checking your Project Tasks, and post the checker result to yo
 
 ### Environment
 - Ubuntu 18.04.4
-- Python required 3.6 or higher
-- Django 3.0 +
+- Python required 3.6 or higher [follow steps 5 & 6](https://medium.com/@moreless/install-python-3-6-on-ubuntu-16-04-28791d5c2167) then use update alternatives to set python3.6 as higher priority
+- Django 3.0 + -> will be installed by the script please be sure of using pip for pthon3.6 as default
 
 
 ### Install Django and required modules for Development purpose
@@ -29,10 +29,10 @@ go to the [checker_publisher](checker_publisher/) directory and run
 
 ```
 ./refresh_publisher.sh       # This will run migrations functions and will
-                       prompt you to create an admin user
+                             prompt you to create an admin user
 
 # And then
-./run_publisher.sh      # This will run the server at <localhost:8000/dashboard>
+./run_publisher.sh           # This will run the server at <localhost:8000/dashboard>
 ```
 
 ### Route
@@ -44,6 +44,10 @@ This is the main route, via queries will interact with the django ORM engine to 
 you will provide your Holberton API key, your holberton email and intranet password, this data will be stored locally in your machine and will help the api services to make the requests needed. When done with Authentication you will be able to search a project by its id, choose in a list of tasks and run a test for that dutty, then when you are success with the task, you can choose send a customized message via Twitter, to be able to do that you will be promt to save your Twitter app credentials, when submited the checker image will be sent with you message and you will receive the link to the published history
 
 ### ScreenShots
+
+#### Login section
+
+The login will ask for your Holberton credentials, send a request to the intranets API and then stores the auth_token locally in the sessionStorage at the browser you can check this value in devtools, this way the transactions will only use your token to access the data store in the project db, the social media credentials storing is improving right now so the experience flow will be more user friendly and easy to use
 
 ![Login](screenshots/login.png)
 [All screenshots](screenshots/)
@@ -84,7 +88,7 @@ This models stores historic sended messages simple model
 	'img_url': self.img_url,
 	'checker_url': self.checker_url,
 	'date': self.date,
-	'email': self.email
+	'email': self.email -> this will allow us to filter by each user
 }
 ```
 
